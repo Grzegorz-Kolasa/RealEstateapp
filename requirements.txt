@@ -1,4 +1,3 @@
-pandas
 openai
 sentence-transformers
 lancedb

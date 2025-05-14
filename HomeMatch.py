@@ -1,19 +1,5 @@
 from dotenv import load_dotenv
 import os
-
-# Load environment variables from .env file
-load_dotenv()
-
-# Get API key and base URL from environment variables
-api_key = os.getenv("OPENAI_API_KEY")
-base_url = os.getenv("OPENAI_BASE_URL")
-
-client = OpenAI(
-    api_key=api_key,
-    base_url=base_url
-)
-
-import pandas
 import csv
 import random
 import lancedb
@@ -21,6 +7,18 @@ from openai import OpenAI
 from sentence_transformers import SentenceTransformer
 from lancedb.pydantic import LanceModel, vector
 import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get API key and base URL from environment variables
+# Ensure you have set OPENAI_API_KEY and OPENAI_BASE_URL in your .env file
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL")
+)
+
+
 
 # Initialize the SentenceTransformer model
 embedding_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
@@ -197,7 +195,8 @@ def generate_new_listings_with_sentiment(similar_properties, user_dream_property
 # Example usage
 if __name__ == "__main__":
 
-    # Prompt template for generating a real estate listing
+
+    # Name of the neighborhoods
     neighborhoods = [
         "Green Oaks",
         "Willow Creek",
@@ -206,6 +205,8 @@ if __name__ == "__main__":
         "Sunset Hills",
         "Valley View"
     ]
+
+    # Prompt templates for generating descriptions
     prompt_template_desc = (
         "Generate a real estate description with the following details:\n"
         "Price: {price}\n"
@@ -213,6 +214,8 @@ if __name__ == "__main__":
         "Bathrooms: {bathrooms}\n"
         "Size: {house_size} square meters\n"
     )
+
+    # Prompt template for generating neighborhood descriptions
     prompt_template_n_desc = (
         "Generate a real estate neighborhood description with the following details:\n"
         "Neighborhood: {neighborhood}\n"
@@ -230,6 +233,7 @@ if __name__ == "__main__":
         print("Listings generated and saved to CSV file.")
 
     # Generate embeddings for the listings
+    print(listings[0])
     emb = generate_embedding(listings)
 
     db = lancedb.connect("~/.real_estate_db")
@@ -252,7 +256,23 @@ if __name__ == "__main__":
         data=data
     )
 
-    user_dream_property = get_user_dream_property()
+    # Add a feature flag for testing
+    USE_HARDCODED_DREAM_PROPERTY = True  # Set to True for testing, False for interactive input
+    
+    if USE_HARDCODED_DREAM_PROPERTY:
+        # Hardcoded user_dream_property for testing
+        user_dream_property = {
+            "Neighborhood": "Valley View",
+            "Price": "$600,000",
+            "Bedrooms": 4,
+            "Bathrooms": 3,
+            "House Size": "2500 sqft",
+            "Description": "A modern home with a large kitchen and garden.",
+            "Neighborhood Description": "A peaceful area with parks and schools nearby."
+        }
+    else:
+        # Get user input for dream property
+        user_dream_property = get_user_dream_property()
 
     user_dream_property_embedding = generate_embedding([
         user_dream_property["Neighborhood"],
