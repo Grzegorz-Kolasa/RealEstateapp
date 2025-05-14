@@ -1,0 +1,5 @@
+pandas
+openai
+sentence-transformers
+lancedb
+python-dotenv
