@@ -23,7 +23,7 @@ The **Real Estate Recommendation App** is a Python-based application that helps 
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Grzegorz-Kolasa/RealEstateapp.git
    cd RealEstateapp
 2. Install dependencies:
    ```bash
