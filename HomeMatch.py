@@ -57,16 +57,16 @@ def generate_listing(num_listings = 5):
             price=price
         ))
         neighborhood_description = generate_n_description(prompt_template_n_desc.format(neighborhood=neighborhood))
-        listing = {
-                "Neighborhood": neighborhood,
-                "Price": f"${price:,.0f}",
-                "Bedrooms": bedrooms,
-                "Bathrooms": bathrooms,
-                "House Size": f"{house_size:,} sqft",
-                "Description": description,
-                "Neighborhood Description": neighborhood_description
-            }
-        listings.append(listing.values())
+        listing = [
+            neighborhood,
+            f"${price:,.0f}",
+            str(bedrooms),
+            str(bathrooms),
+            f"{house_size:,} sqft",
+            description,
+            neighborhood_description
+        ]
+        listings.append(listing)
     return listings
 
 
@@ -167,6 +167,7 @@ def generate_new_listings_with_sentiment(similar_properties, user_dream_property
             f"Bedrooms: {row['bedrooms']}\n"
             f"Bathrooms: {row['bathrooms']}\n"
             f"House Size: {row['house_size']} sqft\n"
+            "Do not cut off in the middle of a sentence. Finish the last sentence if you reach the limit."
         )
 
         # Generate new descriptions using the LLM
@@ -175,6 +176,7 @@ def generate_new_listings_with_sentiment(similar_properties, user_dream_property
             f"Generate a neighborhood description inspired by:\n"
             f"{user_dream_property['Neighborhood Description']}\n"
             f"For the neighborhood: {row['neighborhood']}"
+            "Do not cut off in the middle of a sentence. Finish the last sentence if you reach the limit."
         )
 
         # Create a new listing with updated descriptions
@@ -213,12 +215,14 @@ if __name__ == "__main__":
         "Bedrooms: {bedrooms}\n"
         "Bathrooms: {bathrooms}\n"
         "Size: {house_size} square meters\n"
+        "Do not cut off in the middle of a sentence. Finish the last sentence if you reach the limit."
     )
 
     # Prompt template for generating neighborhood descriptions
     prompt_template_n_desc = (
         "Generate a real estate neighborhood description with the following details:\n"
         "Neighborhood: {neighborhood}\n"
+        "Do not cut off in the middle of a sentence. Finish the last sentence if you reach the limit."
     )
 
     # Check if the CSV file exists and is not empty
@@ -264,8 +268,8 @@ if __name__ == "__main__":
         user_dream_property = {
             "Neighborhood": "Valley View",
             "Price": "$600,000",
-            "Bedrooms": 4,
-            "Bathrooms": 3,
+            "Bedrooms": 2,
+            "Bathrooms": 2,
             "House Size": "2500 sqft",
             "Description": "A modern home with a large kitchen and garden.",
             "Neighborhood Description": "A peaceful area with parks and schools nearby."
@@ -290,7 +294,7 @@ if __name__ == "__main__":
         lambda row: f"{row['neighborhood']} at the price: {row['price']} and DESCRIPTION {row['description']}",
         axis=1
     ).tolist()
-    print("\nSimilar properties found:", output_strings)
+    #print("\nSimilar properties found:", output_strings)
 
     #Criteria: Use of LLM for generating personalized descriptions
     new_listings = generate_new_listings_with_sentiment(similar_properties, user_dream_property)
