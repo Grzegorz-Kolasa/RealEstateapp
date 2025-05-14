@@ -25,3 +25,13 @@ The **Real Estate Recommendation App** is a Python-based application that helps 
    ```bash
    git clone <repository-url>
    cd RealEstateapp
+2. Install dependencies:
+   ```bash
+    pip install -r requirements.txt
+3. Create a .env file in the project directory and add your OpenAI API key and base URL:
+    ```bash
+    OPENAI_API_KEY=your_openai_api_key
+    OPENAI_BASE_URL=your_openai_base_url
+4. Run the application
+    ```bash
+    python HomeMatch.py
