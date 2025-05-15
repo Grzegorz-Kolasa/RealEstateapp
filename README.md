@@ -35,3 +35,4 @@ The **Real Estate Recommendation App** is a Python-based application that helps 
 4. Run the application
     ```bash
     python HomeMatch.py
+By default it will use previously generated property listings from listings.csv. If you want to generate new listings simply delete listings.csv. Also by default for testing user deam property is hardcoded (examplary one). If you want to enter your own data change the flag USE_HARDCODED_DREAM_PROPERTY = False in HomeMatch.py
